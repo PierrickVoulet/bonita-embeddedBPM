@@ -11,7 +11,7 @@ http://www.springframework.org/schema/context	http://www.springframework.org/sch
             <props>
                 <prop key="user">sa</prop>
                 <prop key="password"></prop>
-                <prop key="URL"><![CDATA[jdbc:h2:file:C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/ws/standalone-platform-app/h2_database\bonita_journal.db;LOCK_MODE=0;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;]]></prop>
+                <prop key="URL"><![CDATA[jdbc:h2:file:./bonita_journal.db;LOCK_MODE=0;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;]]></prop>
             </props>
         </property>
     </bean>
