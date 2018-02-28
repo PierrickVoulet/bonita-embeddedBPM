@@ -1,5 +1,6 @@
 package org.bonitasoft.app;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import org.bonitasoft.engine.util.APITypeManager;
 public class Main {
 	static public void main(String[] args) throws Exception {
 		// Start the Bonita BPM Engine
-		EmbeddedBPM.start();
+		EmbeddedBPM.start(new File(".\\src\\main\\resources\\setup").getAbsolutePath());
 		
 		// Make some API calls to confirm it works well
 		// - Login with tenant administrator

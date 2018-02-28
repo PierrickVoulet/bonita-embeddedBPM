@@ -7,15 +7,15 @@
 
 	<bean id="btm1" class="org.springframework.util.SystemPropertyUtils"
 		factory-method="resolvePlaceholders">
-		<constructor-arg value="./bonita-bt1.tlog" />
+		<constructor-arg value="./bonita_embedded_engine/btm/bonita-bt1.tlog" />
 	</bean>
 
 	<bean id="btm2" class="org.springframework.util.SystemPropertyUtils"
 		factory-method="resolvePlaceholders">
-		<constructor-arg value="./bonita-bt2.tlog" />
+		<constructor-arg value="./bonita_embedded_engine/btm/bonita-bt2.tlog" />
 	</bean>
 
-	<bean id="removeBtmFiles" class="com.bonitasoft.standalone.platform.spring.FileRemover"
+	<bean id="removeBtmFiles" class="org.bonitasoft.engine.embedded.bpm.spring.FileRemover"
 		depends-on="btm1, btm2">
 		<constructor-arg>
 			<util:list>

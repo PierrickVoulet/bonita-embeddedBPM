@@ -19,8 +19,8 @@
 		<property name="arguments">
 			<!-- The new Properties -->
 			<util:properties>
-				<prop key="java.naming.factory.initial">com.bonitasoft.standalone.platform.jndi.SimpleMemoryContextFactory</prop>
-				<prop key="java.naming.factory.url.pkgs">com.bonitasoft.standalone.platform.jndi</prop>
+				<prop key="java.naming.factory.initial">org.bonitasoft.engine.embedded.bpm.jndi.SimpleMemoryContextFactory</prop>
+				<prop key="java.naming.factory.url.pkgs">org.bonitasoft.engine.embedded.bpm.jndi</prop>
 			</util:properties>
 		</property>
 	</bean>
@@ -36,7 +36,7 @@
 	<bean id="jndiTemplate" class="org.springframework.jndi.JndiTemplate" />
 
 	<!-- Bind the mapping -->
-	<bean id="jndiSetup" class="com.bonitasoft.standalone.platform.jndi.MemoryJNDISetup"
+	<bean id="jndiSetup" class="org.bonitasoft.engine.embedded.bpm.jndi.MemoryJNDISetup"
 		scope="singleton" init-method="init" destroy-method="clean">
 		<constructor-arg name="jndiTemplate" ref="jndiTemplate" />
 		<constructor-arg name="jndiMapping" ref="jndiMapping" />
