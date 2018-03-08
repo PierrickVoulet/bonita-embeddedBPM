@@ -21,6 +21,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class EmbeddedBPM {
+	static private String EMBEDDED_BPM_EXTRA_CONFIG_FILE = "embeddedBPM-cfg.xml";
+	
     static private ConfigurableApplicationContext springContext = null;
     
     static private PlatformLoginAPI platformLoginAPI = null;
@@ -29,7 +31,7 @@ public class EmbeddedBPM {
 		// Initialize the Platform DB if it does not exist yet - being done in external JVM to avoid Spring context conflicts
 		BonitaPlatformSetupTool.launch(Init.class.getName(), setupPath);
 
-        springContext = new ClassPathXmlApplicationContext("engine.cfg.xml");
+        springContext = new ClassPathXmlApplicationContext(EMBEDDED_BPM_EXTRA_CONFIG_FILE);
 		
 		// Start the Platform
 		platformLoginAPI = PlatformAPIAccessor.getPlatformLoginAPI();
