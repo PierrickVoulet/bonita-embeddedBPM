@@ -27,6 +27,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/bonita-embedded-bpm/target/bonita-embedded-bpm-7.5.4-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="/bonita-embedded-bpm/target/bonita-embedded-bpm-7.6.3-jar-with-dependencies.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

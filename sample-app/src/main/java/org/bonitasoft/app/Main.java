@@ -14,9 +14,12 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.util.APITypeManager;
 
 public class Main {
+	static public String embeddedBPMWorkspace = "./bonita_embedded_engine";
+	static public String embeddedBPMSetup = "./src/main/resources/setup";
+	
 	static public void main(String[] args) throws Exception {
 		// Start the Bonita BPM Engine
-		EmbeddedBPM.start(new File(".\\src\\main\\resources\\setup").getAbsolutePath());
+		EmbeddedBPM.start(new File(embeddedBPMWorkspace).getAbsolutePath(), new File(embeddedBPMSetup).getAbsolutePath());
 		
 		// Make some API calls to confirm it works well
 		// - Login with tenant administrator
