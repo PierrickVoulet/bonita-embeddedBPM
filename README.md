@@ -1,6 +1,6 @@
 # bonita-embeddedBPM
 
-This repository is home to Bonita EmbeddedBPM which aims to provide suitable resources to ease the integration of Bonita BPN Engine as part of any Java custom application. There are two main modules: the JAR and a sample application using it.
+This repository is home to Bonita EmbeddedBPM which aims to provide suitable resources to ease the integration of Bonita BPN Engine as part of any Java custom application. There are three main modules: the JAR and a sample standalone and web applications using it.
 
 ## Architecture challenges
 
