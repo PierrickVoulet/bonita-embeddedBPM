@@ -1,10 +1,11 @@
 package org.bonitasoft.engine.embedded.bpm;
 
+import java.io.IOException;
+
 import org.bonitasoft.engine.api.PlatformAPI;
 import org.bonitasoft.engine.api.PlatformAPIAccessor;
 import org.bonitasoft.engine.api.PlatformLoginAPI;
-import org.bonitasoft.engine.embedded.bpm.setup.BonitaPlatformSetupTool;
-import org.bonitasoft.engine.embedded.bpm.setup.Init;
+import org.bonitasoft.engine.embedded.bpm.setup.BonitaPlatformSetupToolProcessBuilder;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.CreationException;
 import org.bonitasoft.engine.exception.ServerAPIException;
@@ -27,9 +28,9 @@ public class EmbeddedBPM {
     
     static private PlatformLoginAPI platformLoginAPI = null;
 
-	static public void start(String setupPath) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException {
+	static public void start(String setupPath) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
 		// Initialize the Platform DB if it does not exist yet - being done in external JVM to avoid Spring context conflicts
-		BonitaPlatformSetupTool.launch(Init.class.getName(), setupPath);
+		BonitaPlatformSetupToolProcessBuilder.init(setupPath);
 
         springContext = new ClassPathXmlApplicationContext(EMBEDDED_BPM_EXTRA_CONFIG_FILE);
 		

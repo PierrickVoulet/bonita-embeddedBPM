@@ -206,6 +206,11 @@
             <logger category="org.hibernate">
                 <level name="WARN" />
             </logger>
+            <!-- Remove wrong warnings about ehcache: -->
+            <logger category="org.hibernate.cache.ehcache.AbstractEhcacheRegionFactory">
+                <level name="ERROR" />
+            </logger>
+
             <logger category="net.sf.ehcache">
                 <level name="WARN" />
             </logger>
@@ -249,7 +254,7 @@
             <datasources>
 
                 <!-- #################################################################################################################### -->
-                <!-- ##############   BETWEEN THESE 2 SECTIONS IS A TEMPLATE MODIFIED BY BONITA BPM SETUP TOOL.          ################ -->
+                <!-- ##############   BETWEEN THESE 2 SECTIONS IS A TEMPLATE MODIFIED BY BONITA SETUP TOOL.              ################ -->
                 <!-- #######   BELOW VALUES SURROUNDED BY '@@' MUST NOT BE TOUCHED, AS THEY ARE USED INTERNALLY BY SETUP TOOL.   ######## -->
                 <!-- #########      FOR OTHER VALUES, DO NOT CHANGE ANYTHING UNLESS YOU ARE SURE OF WHAT YOU ARE DOING.      ############ -->
                 <!-- ##############          YOU CAN ADD CUSTOM CONFIGURATION ABOVE AND BELOW THIS TEMPLATE.            ################# -->
@@ -267,7 +272,7 @@
 
                 <!--
                 #######################################################################################################
-                Configure Data source for Bonita BPM standard database
+                Configure Data source for Bonita standard database
                 #######################################################################################################
                 -->
                 <!-- H2 -->
@@ -410,7 +415,7 @@
                 </datasource>
 
                 <!-- #################################################################################################################### -->
-                <!-- ########################         END OF TEMPLATE MODIFIED BY BONITA BPM SETUP TOOL         ######################### -->
+                <!-- ########################         END OF TEMPLATE MODIFIED BY BONITA SETUP TOOL             ######################### -->
                 <!-- ###################            YOU CAN ADD CUSTOM CONFIGURATION *BELOW* THIS TEMPLATE              ################# -->
                 <!-- #################################################################################################################### -->
 
@@ -622,8 +627,8 @@
         <subsystem xmlns="urn:jboss:domain:undertow:3.1">
             <buffer-cache name="default" />
             <server name="default-server">
-                <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true" max-post-size="104857600" />
-                <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="true" />
+                <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="false" max-post-size="104857600" />
+                <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="false" />
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content" />
                 </host>

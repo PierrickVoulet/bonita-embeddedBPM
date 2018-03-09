@@ -5,16 +5,16 @@
 
 	<groupId>org.bonitasoft.engine</groupId>
 	<artifactId>bonita-embedded-bpm</artifactId>
-	<version>7.5.4</version>
+	<version>7.6.3</version>
 	<name>Bonita Embedded BPM Engine</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<bonita.version>7.5.4</bonita.version>
+		<bonita.version>7.6.3</bonita.version>
 		<btm.version>2.1.3</btm.version>
-		<bonecp.version>0.7.1.RELEASE</bonecp.version>
+		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 	</properties>
 
 	<dependencies>
@@ -29,11 +29,6 @@
 			<artifactId>bonita-server</artifactId>
 			<version>${bonita.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.platform</groupId>
-			<artifactId>platform-setup</artifactId>
-			<version>${bonita.version}</version>
-		</dependency>
 
 		<!-- Transaction Management -->
 		<dependency>
@@ -45,13 +40,6 @@
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>
 			<version>${bonecp.version}</version>
-		</dependency>
-
-		<!-- Ant -->
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-			<version>1.10.2</version>
 		</dependency>
 	</dependencies>
 
