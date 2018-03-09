@@ -1,6 +1,5 @@
 package org.bonitasoft.app;
 
-import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,13 +13,13 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.util.APITypeManager;
 
 public class Main {
-	static private String EMBEDDED_BPM_WORKSPACE = "./bonita_embedded_engine";
-	static private String EMBEDDED_BPM_SETUP = "./src/main/resources/setup";
-	static private String EMBEDDED_BPM_EXTRA_CONFIG_FILE = "./embeddedBPM-cfg.xml";
+	static private String EMBEDDED_BPM_SERVER = "C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/output/bonita-embeddedBPM/bonita_embedded_engine/server";
+	static private String EMBEDDED_BPM_SETUP = "C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/output/bonita-embeddedBPM/bonita_embedded_engine/setup";
+	static private String EMBEDDED_BPM_EXTRA_CONFIG_FILE = "C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/output/bonita-embeddedBPM/bonita_embedded_engine/embeddedBPM-context.xml";
 	
     	static public void main(String[] args) throws Exception {
 		// Start the Bonita BPM Engine
-		EmbeddedBPM.start(new File(EMBEDDED_BPM_WORKSPACE).getAbsolutePath(), new File(EMBEDDED_BPM_SETUP).getAbsolutePath(), new File(EMBEDDED_BPM_EXTRA_CONFIG_FILE).getAbsolutePath());
+		EmbeddedBPM.start(EMBEDDED_BPM_SERVER, EMBEDDED_BPM_SETUP, EMBEDDED_BPM_EXTRA_CONFIG_FILE);
 		
 		// Make some API calls to confirm it works well
 		// - Login with tenant administrator
