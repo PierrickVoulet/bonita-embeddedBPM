@@ -22,17 +22,17 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class EmbeddedBPM {
-	static private String EMBEDDED_BPM_EXTRA_CONFIG_FILE = "embeddedBPM-cfg.xml";
-	
-    static private ConfigurableApplicationContext springContext = null;
+	static private ConfigurableApplicationContext springContext = null;
     
     static private PlatformLoginAPI platformLoginAPI = null;
 
-	static public void start(String embeddedBPMWorkspacePath, String setupPath) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
+	static public void start(String embeddedBPMWorkspacePath, String setupPath, String springConfigPath) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
 		// Initialize the Platform DB if it does not exist yet - being done in external JVM to avoid Spring context conflicts
 		BonitaPlatformSetupToolProcessBuilder.init(embeddedBPMWorkspacePath, setupPath);
 
-        springContext = new ClassPathXmlApplicationContext(EMBEDDED_BPM_EXTRA_CONFIG_FILE);
+		if(springConfigPath != null) {
+			springContext = new ClassPathXmlApplicationContext(springConfigPath);
+		}
 		
 		// Start the Platform
 		platformLoginAPI = PlatformAPIAccessor.getPlatformLoginAPI();
@@ -61,6 +61,8 @@ public class EmbeddedBPM {
 			platformAPI.stopNode();
 		}
 		
-        springContext.close();
+		if(springContext != null) {
+			springContext.close();
+		}
     }
 }

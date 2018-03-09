@@ -14,12 +14,13 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.util.APITypeManager;
 
 public class Main {
-	static public String embeddedBPMWorkspace = "./bonita_embedded_engine";
-	static public String embeddedBPMSetup = "./src/main/resources/setup";
+	static private String EMBEDDED_BPM_WORKSPACE = "./bonita_embedded_engine";
+	static private String EMBEDDED_BPM_SETUP = "./src/main/resources/setup";
+	static private String EMBEDDED_BPM_EXTRA_CONFIG_FILE = "./embeddedBPM-cfg.xml";
 	
-	static public void main(String[] args) throws Exception {
+    	static public void main(String[] args) throws Exception {
 		// Start the Bonita BPM Engine
-		EmbeddedBPM.start(new File(embeddedBPMWorkspace).getAbsolutePath(), new File(embeddedBPMSetup).getAbsolutePath());
+		EmbeddedBPM.start(new File(EMBEDDED_BPM_WORKSPACE).getAbsolutePath(), new File(EMBEDDED_BPM_SETUP).getAbsolutePath(), new File(EMBEDDED_BPM_EXTRA_CONFIG_FILE).getAbsolutePath());
 		
 		// Make some API calls to confirm it works well
 		// - Login with tenant administrator
