@@ -1,0 +1,146 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<!-- JDBC H2 -->
+	<bean id="driverProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="user">sa</prop>
+                <prop key="password"></prop>
+                <prop key="URL"><![CDATA[jdbc:h2:file:C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/ws/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/bonita_embedded_engine/h2_database/bonita_journal.db;LOCK_MODE=0;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;]]></prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="xaDataSourceClass" class="java.lang.String">
+        <constructor-arg value="org.h2.jdbcx.JdbcDataSource" />
+    </bean>
+    
+    <bean id="driverClass" class="java.lang.String">
+        <constructor-arg value="org.h2.Driver" />
+    </bean>
+
+	<!-- Bitronix TM -->
+	<bean id="btm1" class="org.springframework.util.SystemPropertyUtils"
+		factory-method="resolvePlaceholders">
+		<constructor-arg value="C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/ws/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/bonita_embedded_engine/btm/bonita-bt1.tlog" />
+	</bean>
+
+	<bean id="btm2" class="org.springframework.util.SystemPropertyUtils"
+		factory-method="resolvePlaceholders">
+		<constructor-arg value="C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/ws/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/bonita_embedded_engine/btm/bonita-bt2.tlog" />
+	</bean>
+
+	<bean id="removeBtmFiles" class="org.bonitasoft.engine.embedded.bpm.spring.FileRemover"
+		depends-on="btm1, btm2">
+		<constructor-arg>
+			<util:list>
+				<ref bean="btm1" />
+				<ref bean="btm2" />
+			</util:list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="btmConfig" factory-method="getConfiguration"
+		class="bitronix.tm.TransactionManagerServices" depends-on="removeBtmFiles">
+		<property name="serverId" value="btm-server" />
+
+		<property name="logPart1Filename" ref="btm1" />
+		<property name="logPart2Filename" ref="btm2" />
+
+		<!-- property name="journal"><null/></property -->
+		<property name="filterLogStatus" value="true" />
+		<property name="debugZeroResourceTransaction" value="false" />
+		<property name="warnAboutZeroResourceTransaction" value="false" />
+		<!-- property name="defaultTransactionTimeout" value="300" / -->
+	</bean>
+	
+	<bean id="BitronixTransactionManager" factory-method="getTransactionManager"
+		class="bitronix.tm.TransactionManagerServices" depends-on="btmConfig"
+		destroy-method="shutdown">
+	</bean>
+	
+	<!-- DS -->
+	<bean id="bonitaDataSource" class="bitronix.tm.resource.jdbc.PoolingDataSource"
+		init-method="init" destroy-method="close">
+		<property name="className" ref="xaDataSourceClass" />
+		<property name="uniqueName" value="java:comp/env/bonitaDS" />
+		<property name="maxPoolSize" value="10" />
+		<property name="allowLocalTransactions" value="true" />
+		<property name="driverProperties" ref="driverProperties">
+		</property>
+	</bean>
+
+	<bean id="bonitaSequenceManagerDataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" ref="driverClass" />
+		<property name="jdbcUrl" value="#{driverProperties.getProperty('URL')}" />
+		<property name="username" value="#{driverProperties.getProperty('user')}" />
+		<property name="password" value="#{driverProperties.getProperty('password')}" />
+		<property name="idleConnectionTestPeriodInMinutes" value="60" />
+		<property name="idleMaxAgeInMinutes" value="240" />
+		<property name="maxConnectionsPerPartition" value="2" />
+		<property name="minConnectionsPerPartition" value="1" />
+		<property name="partitionCount" value="1" />
+		<property name="acquireIncrement" value="5" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>
+	
+	<!-- JNDI -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject">
+			<bean
+				class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+				<property name="targetClass" value="java.lang.System" />
+				<property name="targetMethod" value="getProperties" />
+			</bean>
+		</property>
+		<property name="targetMethod" value="putAll" />
+		<property name="arguments">
+			<!-- The new Properties -->
+			<util:properties>
+				<prop key="java.naming.factory.initial">org.bonitasoft.engine.embedded.bpm.jndi.SimpleMemoryContextFactory</prop>
+				<prop key="java.naming.factory.url.pkgs">org.bonitasoft.engine.embedded.bpm.jndi</prop>
+			</util:properties>
+		</property>
+	</bean>
+	
+	<util:map id="jndiMapping">
+		<entry key="java:comp/env/bonitaDS" value-ref="bonitaDataSource" />
+		<entry key="java:comp/env/bonitaSequenceManagerDS" value-ref="bonitaSequenceManagerDataSource" />
+		<entry key="java:comp/UserTransaction" value-ref="BitronixTransactionManager" />
+	</util:map>
+	
+	<bean id="jndiTemplate" class="org.springframework.jndi.JndiTemplate" />
+
+	<bean id="jndiSetup" class="org.bonitasoft.engine.embedded.bpm.jndi.MemoryJNDISetup"
+		scope="singleton" init-method="init" destroy-method="clean">
+		<constructor-arg name="jndiTemplate" ref="jndiTemplate" />
+		<constructor-arg name="jndiMapping" ref="jndiMapping" />
+	</bean>
+	
+	<!-- System properties -->
+	<bean id="defineSysprops"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject">
+			<!-- System.getProperties() -->
+			<bean
+				class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+				<property name="targetClass" value="java.lang.System" />
+				<property name="targetMethod" value="getProperties" />
+			</bean>
+		</property>
+		<property name="targetMethod" value="putAll" />
+		<property name="arguments">
+			<util:properties>
+				<prop key="sysprop.bonita.db.vendor">h2</prop>
+			</util:properties>
+		</property>
+	</bean>
+</beans>
