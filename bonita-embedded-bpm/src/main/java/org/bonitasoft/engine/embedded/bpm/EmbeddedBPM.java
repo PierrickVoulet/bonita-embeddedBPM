@@ -22,13 +22,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class EmbeddedBPM {
+	static public String EMBEDDED_BPM_SERVER_PATH = "embeddedBPM.serverPath";
+	static public String EMBEDDED_BPM_SETUP_PATH = "embeddedBPM.setupPath";
+	
 	static private ConfigurableApplicationContext springContext = null;
     
     static private PlatformLoginAPI platformLoginAPI = null;
 
-	static public void start(String embeddedBPMServerPath, String setupPath, String springConfigPath) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
+	static public void start(String springConfigPath) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
 		// Initialize the Platform DB if it does not exist yet - being done in external JVM to avoid Spring context conflicts
-		BonitaPlatformSetupToolProcessBuilder.init(embeddedBPMServerPath, setupPath);
+		BonitaPlatformSetupToolProcessBuilder.init(System.getProperty(EMBEDDED_BPM_SERVER_PATH), System.getProperty(EMBEDDED_BPM_SETUP_PATH));
 
 		if(springConfigPath != null) {
 			springContext = new FileSystemXmlApplicationContext(springConfigPath);

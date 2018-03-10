@@ -15,11 +15,14 @@ import org.bonitasoft.engine.util.APITypeManager;
 public class Main {
 	static private String EMBEDDED_BPM_SERVER = "C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/output/bonita-embeddedBPM/bonita_embedded_engine/server";
 	static private String EMBEDDED_BPM_SETUP = "C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/output/bonita-embeddedBPM/bonita_embedded_engine/setup";
-	static private String EMBEDDED_BPM_EXTRA_CONFIG_FILE = "C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/output/bonita-embeddedBPM/bonita_embedded_engine/embeddedBPM-context.xml";
+	static private String EMBEDDED_BPM_CONTEXT_PATH = "C:/Users/Pierrick/Documents/US/Adoption/embeddedBPM/output/bonita-embeddedBPM/bonita_embedded_engine/embeddedBPM-context.xml";
 	
-    	static public void main(String[] args) throws Exception {
+    static public void main(String[] args) throws Exception {
+    	System.setProperty(EmbeddedBPM.EMBEDDED_BPM_SERVER_PATH, EMBEDDED_BPM_SERVER);
+    	System.setProperty(EmbeddedBPM.EMBEDDED_BPM_SETUP_PATH, EMBEDDED_BPM_SETUP);
+    	
 		// Start the Bonita BPM Engine
-		EmbeddedBPM.start(EMBEDDED_BPM_SERVER, EMBEDDED_BPM_SETUP, EMBEDDED_BPM_EXTRA_CONFIG_FILE);
+		EmbeddedBPM.start(EMBEDDED_BPM_CONTEXT_PATH);
 		
 		// Make some API calls to confirm it works well
 		// - Login with tenant administrator
