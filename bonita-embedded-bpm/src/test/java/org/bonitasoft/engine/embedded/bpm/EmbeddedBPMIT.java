@@ -36,18 +36,25 @@ public class EmbeddedBPMIT {
 	static final private String EMBEDDED_BPM_SETUP = "setup";
 	static final private String EMBEDDED_BPM_CONTEXT = "embeddedBPM-context.xml";
 
-	static final private String TENANT_ADMIN_USERNAME_PASSWORD = "install";
-	static final private String USER_USERNAME_PASSWORD = "User";
+	// Constants used by the tests
 	
-	static {
-		APITypeManager.setAPITypeAndParams(ApiAccessType.LOCAL, new HashMap<String, String>());
-	}
+    private static final String PLATFORM_USER_NAME = "platformAdmin";
+    private static final String PLATFORM_PASSWORD = "platform";
+    private static final String TECHNICAL_USER_NAME = "install";
+    private static final String TECHNICAL_PASSWORD = "install";
+    private static final String USER_NAME = "walter.bates";
+    private static final String USER_PASSWORD = "bpm";
+    private static final String ACTOR_NAME = "MyActor";
 	
 	@BeforeClass
 	public static void buildPlatform() throws Exception {
 		System.setProperty(EmbeddedBPM.EMBEDDED_BPM_SERVER_PATH, WORKSPACE + File.separator + EMBEDDED_BPM_SERVER);
 		System.setProperty(EmbeddedBPM.EMBEDDED_BPM_SETUP_PATH, WORKSPACE + File.separator + EMBEDDED_BPM_SETUP);
 		System.setProperty(EmbeddedBPM.EMBEDDED_BPM_CONTEXT_PATH, WORKSPACE + File.separator + EMBEDDED_BPM_CONTEXT);
+		
+		EmbeddedBPM.setPlatformAdminInformation(PLATFORM_USER_NAME, PLATFORM_PASSWORD);
+		
+		APITypeManager.setAPITypeAndParams(ApiAccessType.LOCAL, new HashMap<String, String>());
 		
 		cleanTestWorkspace();
 		
@@ -77,10 +84,20 @@ public class EmbeddedBPMIT {
 		Assert.assertNotNull("Tenant administrator login is not valid", getTenantAdministratorSession());
 	}
 
+	public APISession getTenantAdministratorSession() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, UnknownUserException, LoginException {
+		return TenantAPIAccessor.getLoginAPI().login(TECHNICAL_USER_NAME, TECHNICAL_PASSWORD);
+	}
 	
 	@Test
 	public void createUser() throws Exception {
 		Assert.assertNotNull("Creation of user failed", createNewUser());
+	}
+	
+	public User createNewUser() throws UnknownUserException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException, AlreadyExistsException, CreationException {
+		IdentityAPI identityAPI = TenantAPIAccessor.getIdentityAPI(getTenantAdministratorSession());
+		
+		String userName = USER_NAME + "." + new Date().getTime();
+		return identityAPI.createUser(userName, USER_PASSWORD);
 	}
 	
 	// TODO: do not work as intended as the Spring context is closed and not rebuilt completely
@@ -94,14 +111,6 @@ public class EmbeddedBPMIT {
 //		Assert.assertNotNull("The platform has not been restarted with previous state", TenantAPIAccessor.getIdentityAPI(getTenantAdministratorSession()).getUser(userId));
 //	}
 	
-	public APISession getTenantAdministratorSession() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, UnknownUserException, LoginException {
-		return TenantAPIAccessor.getLoginAPI().login(TENANT_ADMIN_USERNAME_PASSWORD, TENANT_ADMIN_USERNAME_PASSWORD);
-	}
 	
-	public User createNewUser() throws UnknownUserException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException, AlreadyExistsException, CreationException {
-		IdentityAPI identityAPI = TenantAPIAccessor.getIdentityAPI(getTenantAdministratorSession());
-		
-		String userName = USER_USERNAME_PASSWORD + "." + USER_USERNAME_PASSWORD + "." + new Date().getTime();
-		return identityAPI.createUser(userName, USER_USERNAME_PASSWORD, USER_USERNAME_PASSWORD, USER_USERNAME_PASSWORD);
-	}
+	
 }

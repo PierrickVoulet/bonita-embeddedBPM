@@ -29,7 +29,15 @@ public class EmbeddedBPM {
 	static private ConfigurableApplicationContext springContext = null;
     
     static private PlatformLoginAPI platformLoginAPI = null;
+    
+    static private String platformAdminUsername = "platformAdmin";
+    static private String platformAdminPassword = "platform";
 
+    static public void setPlatformAdminInformation(String username, String password) {
+    	platformAdminUsername = username;
+    	platformAdminPassword = password;
+    }
+    
 	static public void start() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
 		// Initialize the Platform DB if it does not exist yet - being done in external JVM to avoid Spring context conflicts
 		BonitaPlatformSetupToolProcessBuilder.init(System.getProperty(EMBEDDED_BPM_SERVER_PATH), System.getProperty(EMBEDDED_BPM_SETUP_PATH));
@@ -40,7 +48,7 @@ public class EmbeddedBPM {
 		
 		// Start the Platform
 		platformLoginAPI = PlatformAPIAccessor.getPlatformLoginAPI();
-		PlatformSession platformAdminSession = platformLoginAPI.login("platformAdmin", "platform");
+		PlatformSession platformAdminSession = platformLoginAPI.login(platformAdminUsername, platformAdminPassword);
 		PlatformAPI platformAPI = PlatformAPIAccessor.getPlatformAPI(platformAdminSession);
 		
 		if(!platformAPI.isPlatformInitialized()) {
@@ -57,7 +65,7 @@ public class EmbeddedBPM {
     }
 
     static public void stop() throws StopNodeException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, InvalidPlatformCredentialsException, PlatformLoginException {
-		PlatformSession platformAdminSession = platformLoginAPI.login("platformAdmin", "platform");
+		PlatformSession platformAdminSession = platformLoginAPI.login(platformAdminUsername, platformAdminPassword);
 		PlatformAPI platformAPI = PlatformAPIAccessor.getPlatformAPI(platformAdminSession);
 		
 		// Stop the platform
