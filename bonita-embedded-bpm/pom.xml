@@ -15,6 +15,8 @@
 		<bonita.version>7.6.3</bonita.version>
 		<btm.version>2.1.3</btm.version>
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
+		<bonita.test.workspace>./test</bonita.test.workspace>
+		<h2.version>1.3.170</h2.version>
 	</properties>
 
 	<dependencies>
@@ -41,10 +43,42 @@
 			<artifactId>bonecp</artifactId>
 			<version>${bonecp.version}</version>
 		</dependency>
+		
+		<!-- Testing -->
+		<dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>compile</scope>
+        </dependency>
+    	<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <bonita.test.workspace>${bonita.test.workspace}</bonita.test.workspace>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.1.0</version>
