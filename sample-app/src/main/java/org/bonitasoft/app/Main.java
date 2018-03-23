@@ -23,7 +23,7 @@ public class Main {
     	System.setProperty(EmbeddedBPM.EMBEDDED_BPM_CONTEXT_PATH, EMBEDDED_BPM_CONTEXT);
     	
 		// Start the Bonita BPM Engine
-		EmbeddedBPM.start();
+		EmbeddedBPM.getInstance().start();
 		
 		// Make some API calls to confirm it works well
 		// - Login with tenant administrator
@@ -40,6 +40,6 @@ public class Main {
 		System.out.println("-------- Test Test User Id: " + identityAPI.getUserByUserName(userName).getId());
 		
 		// Stop the Bonita BPM Engine
-		EmbeddedBPM.stop();
+		EmbeddedBPM.getInstance().stop();
 	}
 }

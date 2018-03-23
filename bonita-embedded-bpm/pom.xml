@@ -13,9 +13,9 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<bonita.version>7.6.3</bonita.version>
+		<bonita.test.workspace>./test</bonita.test.workspace>
 		<btm.version>2.1.3</btm.version>
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
-		<bonita.test.workspace>./test</bonita.test.workspace>
 		<h2.version>1.3.170</h2.version>
 	</properties>
 
@@ -32,29 +32,29 @@
 			<version>${bonita.version}</version>
 		</dependency>
 
-		<!-- Transaction Management -->
-		<dependency>
-			<groupId>org.codehaus.btm</groupId>
-			<artifactId>btm</artifactId>
-			<version>${btm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jolbox</groupId>
-			<artifactId>bonecp</artifactId>
-			<version>${bonecp.version}</version>
-		</dependency>
-		
 		<!-- Testing -->
 		<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
     	<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>${h2.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.btm</groupId>
+			<artifactId>btm</artifactId>
+			<version>${btm.version}</version>
+			<scope>test</scope>
+		</dependency>
+ 		<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>${bonecp.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -79,7 +79,7 @@
                     </execution>
                 </executions>
             </plugin>
-			<!-- <plugin>
+			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
@@ -96,7 +96,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin> -->
+			</plugin>
 		</plugins>
 	</build>
 </project>

@@ -22,35 +22,46 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class EmbeddedBPM {
-	static public String EMBEDDED_BPM_SERVER_PATH = "embeddedBPM.serverPath";
-	static public String EMBEDDED_BPM_SETUP_PATH = "embeddedBPM.setupPath";
-	static public String EMBEDDED_BPM_CONTEXT_PATH = "embeddedBPM.contextFile";
-	
-	static private ConfigurableApplicationContext springContext = null;
-    
-    static private PlatformLoginAPI platformLoginAPI = null;
-    
-    static private String platformAdminUsername = "platformAdmin";
-    static private String platformAdminPassword = "platform";
+	private static EmbeddedBPM instance = null;
 
-    static public void setPlatformAdminInformation(String username, String password) {
-    	platformAdminUsername = username;
-    	platformAdminPassword = password;
-    }
-    
-	static public void start() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
+	final static public String EMBEDDED_BPM_SERVER_PATH = "embeddedBPM.serverPath";
+	final static public String EMBEDDED_BPM_SETUP_PATH = "embeddedBPM.setupPath";
+	final static public String EMBEDDED_BPM_CONTEXT_PATH = "embeddedBPM.contextFile";
+
+	private ConfigurableApplicationContext springContext = null;
+
+	private PlatformLoginAPI platformLoginAPI = null;
+
+	private String platformAdminUsername = "platformAdmin";
+	private String platformAdminPassword = "platform";
+
+	private EmbeddedBPM() {}
+
+	static public EmbeddedBPM getInstance() {
+		if(instance == null) {
+			instance = new EmbeddedBPM();
+		}
+		return instance;
+	}
+
+	public void setPlatformAdminInformation(String username, String password) {
+		platformAdminUsername = username;
+		platformAdminPassword = password;
+	}
+
+	public void start() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
 		// Initialize the Platform DB if it does not exist yet - being done in external JVM to avoid Spring context conflicts
 		BonitaPlatformSetupToolProcessBuilder.init(System.getProperty(EMBEDDED_BPM_SERVER_PATH), System.getProperty(EMBEDDED_BPM_SETUP_PATH));
 
 		if(System.getProperty(EMBEDDED_BPM_CONTEXT_PATH) != null) {
 			springContext = new FileSystemXmlApplicationContext(System.getProperty(EMBEDDED_BPM_CONTEXT_PATH));
 		}
-		
+
 		// Start the Platform
 		platformLoginAPI = PlatformAPIAccessor.getPlatformLoginAPI();
 		PlatformSession platformAdminSession = platformLoginAPI.login(platformAdminUsername, platformAdminPassword);
 		PlatformAPI platformAPI = PlatformAPIAccessor.getPlatformAPI(platformAdminSession);
-		
+
 		if(!platformAPI.isPlatformInitialized()) {
 			platformAPI.initializePlatform();
 		}
@@ -62,19 +73,19 @@ public class EmbeddedBPM {
 		if(platformAdminSession != null) {
 			platformLoginAPI.logout(platformAdminSession);
 		}
-    }
+	}
 
-    static public void stop() throws StopNodeException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, InvalidPlatformCredentialsException, PlatformLoginException {
+	public void stop() throws StopNodeException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, InvalidPlatformCredentialsException, PlatformLoginException {
 		PlatformSession platformAdminSession = platformLoginAPI.login(platformAdminUsername, platformAdminPassword);
 		PlatformAPI platformAPI = PlatformAPIAccessor.getPlatformAPI(platformAdminSession);
-		
+
 		// Stop the platform
 		if(platformAPI.isNodeStarted()) {
 			platformAPI.stopNode();
 		}
-		
+
 		if(springContext != null) {
 			springContext.close();
 		}
-    }
+	}
 }

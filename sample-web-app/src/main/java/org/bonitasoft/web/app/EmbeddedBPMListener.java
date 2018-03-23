@@ -18,7 +18,7 @@ public class EmbeddedBPMListener implements ServletContextListener {
 
 		try {
 			// Start the Bonita BPM Engine
-			EmbeddedBPM.start();
+			EmbeddedBPM.getInstance().start();
 		} catch(Exception e) {
 			System.out.println("EmbeddedBPM startup failure: " + e.getMessage());
 		}
@@ -27,7 +27,7 @@ public class EmbeddedBPMListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		try {
 			// Stop the Bonita BPM Engine
-			EmbeddedBPM.stop();
+			EmbeddedBPM.getInstance().stop();
 		} catch(Exception e) {
 			System.out.println("EmbeddedBPM shutdown failure: " + e.getMessage());
 		}

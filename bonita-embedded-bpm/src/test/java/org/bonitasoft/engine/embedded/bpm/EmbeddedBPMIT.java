@@ -69,7 +69,7 @@ public class EmbeddedBPMIT {
 		System.setProperty(EmbeddedBPM.EMBEDDED_BPM_SETUP_PATH, WORKSPACE + File.separator + EMBEDDED_BPM_SETUP);
 		System.setProperty(EmbeddedBPM.EMBEDDED_BPM_CONTEXT_PATH, WORKSPACE + File.separator + EMBEDDED_BPM_CONTEXT);
 		
-		EmbeddedBPM.setPlatformAdminInformation(PLATFORM_USER_NAME, PLATFORM_PASSWORD);
+		EmbeddedBPM.getInstance().setPlatformAdminInformation(PLATFORM_USER_NAME, PLATFORM_PASSWORD);
 		
 		APITypeManager.setAPITypeAndParams(ApiAccessType.LOCAL, new HashMap<String, String>());
 		
@@ -79,12 +79,12 @@ public class EmbeddedBPMIT {
 		FileUtils.copyDirectoryToDirectory(new File(EmbeddedBPMIT.class.getResource("/" + EMBEDDED_BPM_SETUP).getPath()), WORKSPACE);
 		FileUtils.copyFileToDirectory(new File(EmbeddedBPMIT.class.getResource("/" + EMBEDDED_BPM_CONTEXT).getPath()), WORKSPACE);
 		
-		EmbeddedBPM.start();
+		EmbeddedBPM.getInstance().start();
     }
 	
 	@AfterClass
 	public static void deletePlatform() throws StopNodeException, InvalidPlatformCredentialsException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformLoginException, IOException {
-		EmbeddedBPM.stop();
+		EmbeddedBPM.getInstance().stop();
 		
 		cleanTestWorkspace();
 	}

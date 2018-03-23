@@ -13,6 +13,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<bonita.version>7.6.3</bonita.version>
+		<btm.version>2.1.3</btm.version>
+		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<h2.version>1.3.170</h2.version>
 	</properties>
 
@@ -23,6 +25,14 @@
 			<artifactId>bonita-embedded-bpm</artifactId>
 			<version>${bonita.version}</version>
 		</dependency>
+		
+		<!-- Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.0</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- DB drivers -->
 		<dependency>
@@ -31,13 +41,21 @@
 			<version>${h2.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-
-		<!-- Servlet -->
+		
+		<!-- DB Pool -->
+ 		<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>${bonecp.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- TM -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.0</version>
-			<scope>provided</scope>
+			<groupId>org.codehaus.btm</groupId>
+			<artifactId>btm</artifactId>
+			<version>${btm.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
