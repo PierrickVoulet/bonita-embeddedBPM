@@ -1,10 +1,11 @@
-package org.bonitasoft.engine.embedded.bpm;
+package org.bonitasoft.engine.embedded.bpm.api.impl;
 
 import java.io.IOException;
 
 import org.bonitasoft.engine.api.PlatformAPI;
 import org.bonitasoft.engine.api.PlatformAPIAccessor;
 import org.bonitasoft.engine.api.PlatformLoginAPI;
+import org.bonitasoft.engine.embedded.bpm.api.EmbeddedBPM;
 import org.bonitasoft.engine.embedded.bpm.setup.BonitaPlatformSetupToolProcessBuilder;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.CreationException;
@@ -21,12 +22,8 @@ import org.bonitasoft.engine.session.SessionNotFoundException;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-public class EmbeddedBPM {
-	private static EmbeddedBPM instance = null;
-
-	final static public String EMBEDDED_BPM_SERVER_PATH = "embeddedBPM.serverPath";
-	final static public String EMBEDDED_BPM_SETUP_PATH = "embeddedBPM.setupPath";
-	final static public String EMBEDDED_BPM_CONTEXT_PATH = "embeddedBPM.contextFile";
+public class EmbeddedBPMImpl implements EmbeddedBPM {
+	private static EmbeddedBPMImpl instance = null;
 
 	private ConfigurableApplicationContext springContext = null;
 
@@ -35,20 +32,22 @@ public class EmbeddedBPM {
 	private String platformAdminUsername = "platformAdmin";
 	private String platformAdminPassword = "platform";
 
-	private EmbeddedBPM() {}
+	private EmbeddedBPMImpl() {}
 
-	static public EmbeddedBPM getInstance() {
+	static public EmbeddedBPMImpl getInstance() {
 		if(instance == null) {
-			instance = new EmbeddedBPM();
+			instance = new EmbeddedBPMImpl();
 		}
 		return instance;
 	}
 
+	@Override
 	public void setPlatformAdminInformation(String username, String password) {
 		platformAdminUsername = username;
 		platformAdminPassword = password;
 	}
 
+	@Override
 	public void start() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformNotFoundException, CreationException, StartNodeException, InvalidPlatformCredentialsException, PlatformLoginException, PlatformLogoutException, SessionNotFoundException, IOException, InterruptedException {
 		// Initialize the Platform DB if it does not exist yet - being done in external JVM to avoid Spring context conflicts
 		BonitaPlatformSetupToolProcessBuilder.init(System.getProperty(EMBEDDED_BPM_SERVER_PATH), System.getProperty(EMBEDDED_BPM_SETUP_PATH));
@@ -75,6 +74,7 @@ public class EmbeddedBPM {
 		}
 	}
 
+	@Override
 	public void stop() throws StopNodeException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, InvalidPlatformCredentialsException, PlatformLoginException {
 		PlatformSession platformAdminSession = platformLoginAPI.login(platformAdminUsername, platformAdminPassword);
 		PlatformAPI platformAPI = PlatformAPIAccessor.getPlatformAPI(platformAdminSession);

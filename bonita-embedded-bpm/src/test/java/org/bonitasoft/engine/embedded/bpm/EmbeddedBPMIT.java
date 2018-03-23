@@ -19,6 +19,8 @@ import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
+import org.bonitasoft.engine.embedded.bpm.api.EmbeddedBPM;
+import org.bonitasoft.engine.embedded.bpm.api.impl.EmbeddedBPMImpl;
 import org.bonitasoft.engine.embedded.bpm.waiter.CaseExecutionWaiter;
 import org.bonitasoft.engine.embedded.bpm.waiter.TaskExecutionWaiter;
 import org.bonitasoft.engine.embedded.bpm.waiter.TaskPendingWaiter;
@@ -69,7 +71,7 @@ public class EmbeddedBPMIT {
 		System.setProperty(EmbeddedBPM.EMBEDDED_BPM_SETUP_PATH, WORKSPACE + File.separator + EMBEDDED_BPM_SETUP);
 		System.setProperty(EmbeddedBPM.EMBEDDED_BPM_CONTEXT_PATH, WORKSPACE + File.separator + EMBEDDED_BPM_CONTEXT);
 		
-		EmbeddedBPM.getInstance().setPlatformAdminInformation(PLATFORM_USER_NAME, PLATFORM_PASSWORD);
+		EmbeddedBPMImpl.getInstance().setPlatformAdminInformation(PLATFORM_USER_NAME, PLATFORM_PASSWORD);
 		
 		APITypeManager.setAPITypeAndParams(ApiAccessType.LOCAL, new HashMap<String, String>());
 		
@@ -79,12 +81,12 @@ public class EmbeddedBPMIT {
 		FileUtils.copyDirectoryToDirectory(new File(EmbeddedBPMIT.class.getResource("/" + EMBEDDED_BPM_SETUP).getPath()), WORKSPACE);
 		FileUtils.copyFileToDirectory(new File(EmbeddedBPMIT.class.getResource("/" + EMBEDDED_BPM_CONTEXT).getPath()), WORKSPACE);
 		
-		EmbeddedBPM.getInstance().start();
+		EmbeddedBPMImpl.getInstance().start();
     }
 	
 	@AfterClass
 	public static void deletePlatform() throws StopNodeException, InvalidPlatformCredentialsException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, PlatformLoginException, IOException {
-		EmbeddedBPM.getInstance().stop();
+		EmbeddedBPMImpl.getInstance().stop();
 		
 		cleanTestWorkspace();
 	}

@@ -7,6 +7,7 @@
 	<artifactId>bonita-embedded-bpm</artifactId>
 	<version>7.6.3</version>
 	<name>Bonita Embedded BPM Engine</name>
+	<packaging>jar</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,9 +18,17 @@
 		<btm.version>2.1.3</btm.version>
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<h2.version>1.3.170</h2.version>
+		<felix.version>1.0.0</felix.version>
 	</properties>
 
 	<dependencies>
+		<!-- OSGi -->
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>${felix.version}</version>
+		</dependency>
+
 		<!-- Bonitasoft -->
 		<dependency>
 			<groupId>org.bonitasoft.engine</groupId>
@@ -34,12 +43,12 @@
 
 		<!-- Testing -->
 		<dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>${h2.version}</version>
@@ -51,7 +60,7 @@
 			<version>${btm.version}</version>
 			<scope>test</scope>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>
 			<version>${bonecp.version}</version>
@@ -62,27 +71,53 @@
 	<build>
 		<plugins>
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <bonita.test.workspace>${bonita.test.workspace}</bonita.test.workspace>
-                    </systemPropertyVariables>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<bonita.test.workspace>${bonita.test.workspace}</bonita.test.workspace>
+					</systemPropertyVariables>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<configuration>
+					<instructions>
+						<Export-Package>org.bonitasoft.engine.embedded.bpm.api,org.bonitasoft.engine.api</Export-Package>
+						<Private-Package>org.bonitasoft.engine.embedded.bpm.api.impl</Private-Package>
+						<Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+						<Bundle-Activator>org.bonitasoft.engine.embedded.bpm.api.impl.Activator</Bundle-Activator>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>

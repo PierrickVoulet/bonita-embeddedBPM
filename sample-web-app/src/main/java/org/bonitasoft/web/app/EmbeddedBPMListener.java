@@ -3,7 +3,8 @@ package org.bonitasoft.web.app;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.bonitasoft.engine.embedded.bpm.EmbeddedBPM;
+import org.bonitasoft.engine.embedded.bpm.api.EmbeddedBPM;
+import org.bonitasoft.engine.embedded.bpm.api.impl.EmbeddedBPMImpl;
 
 public class EmbeddedBPMListener implements ServletContextListener {
 	
@@ -18,7 +19,7 @@ public class EmbeddedBPMListener implements ServletContextListener {
 
 		try {
 			// Start the Bonita BPM Engine
-			EmbeddedBPM.getInstance().start();
+			EmbeddedBPMImpl.getInstance().start();
 		} catch(Exception e) {
 			System.out.println("EmbeddedBPM startup failure: " + e.getMessage());
 		}
@@ -27,7 +28,7 @@ public class EmbeddedBPMListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		try {
 			// Stop the Bonita BPM Engine
-			EmbeddedBPM.getInstance().stop();
+			EmbeddedBPMImpl.getInstance().stop();
 		} catch(Exception e) {
 			System.out.println("EmbeddedBPM shutdown failure: " + e.getMessage());
 		}

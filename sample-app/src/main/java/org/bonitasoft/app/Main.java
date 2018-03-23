@@ -8,7 +8,8 @@ import org.bonitasoft.engine.api.ApiAccessType;
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.LoginAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
-import org.bonitasoft.engine.embedded.bpm.EmbeddedBPM;
+import org.bonitasoft.engine.embedded.bpm.api.EmbeddedBPM;
+import org.bonitasoft.engine.embedded.bpm.api.impl.EmbeddedBPMImpl;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.util.APITypeManager;
 
@@ -23,7 +24,7 @@ public class Main {
     	System.setProperty(EmbeddedBPM.EMBEDDED_BPM_CONTEXT_PATH, EMBEDDED_BPM_CONTEXT);
     	
 		// Start the Bonita BPM Engine
-		EmbeddedBPM.getInstance().start();
+    	EmbeddedBPMImpl.getInstance().start();
 		
 		// Make some API calls to confirm it works well
 		// - Login with tenant administrator
@@ -40,6 +41,6 @@ public class Main {
 		System.out.println("-------- Test Test User Id: " + identityAPI.getUserByUserName(userName).getId());
 		
 		// Stop the Bonita BPM Engine
-		EmbeddedBPM.getInstance().stop();
+		EmbeddedBPMImpl.getInstance().stop();
 	}
 }
