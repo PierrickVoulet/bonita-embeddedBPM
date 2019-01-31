@@ -4,5 +4,5 @@ This repository is home to Bonita EmbeddedBPM project which aims to provide suit
 
 You will find more details in other pages:
 
-* [Technical](/PierrickVouletBonitasoft/bonita-embeddedBPM/wiki/Technical)
+* [Technical](/PierrickVoulet/bonita-embeddedBPM/wiki/Technical)
 * [Integration samples](/PierrickVouletBonitasoft/bonita-embeddedBPM/wiki/Samples)
